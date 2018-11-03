@@ -21,22 +21,12 @@ Plug 'jreybert/vimagit'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'gregsexton/gitv'
 call plug#end()
-
-" Custom highlighting with quickhl
-let g:quickhl_manual_enable_at_startup=1
-nmap <CR> <Plug>(quickhl-manual-this-whole-word)
-vmap <CR> <Plug>(quickhl-manual-this-whole-word)
-nmap <silent> <BS> <Plug>(quickhl-manual-reset):nohlsearch<CR>:set cursorline<CR>:redraw<CR>:sleep 150m<CR>:set nocursorline<CR>
-augroup reset_cr_for_quickfix_and_cmdwin
-    autocmd!
-    autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>
-    autocmd CmdwinEnter * nnoremap <buffer> <CR> <CR>
-augroup END
 " }}}
 
 " Global settings {{{
 set nocompatible
 set number relativenumber
+set splitright splitbelow
 
 set hlsearch incsearch nowrapscan ignorecase smartcase
 nohlsearch
@@ -45,6 +35,7 @@ set showcmd showmatch
 set updatetime=100
 
 set path+=**
+set wildignore=*.o,*.o.d,*.lib,*.a
 set wildmenu wildignorecase complete+=d
 set sidescroll=1 sidescrolloff=10
 set showbreak="↪ " colorcolumn=+1
@@ -87,6 +78,8 @@ map <Leader>y "+y
 " File navigation
 nnoremap <Leader>n :NERDTreeToggle<CR>
 nnoremap <Leader>t :TagbarToggle<CR>
+nnoremap j gj
+nnoremap k gk
 
 " Easy quickfix/location list navigation
 " <Esc>j = <A-j> in my setup
@@ -101,6 +94,12 @@ nnoremap <Leader>q :cwindow<CR>
 " Save and quit shortcuts
 nnoremap <C-s> :update<CR>
 nnoremap ZA :xa<CR>
+
+" Custom highlighting with quickhl
+let g:quickhl_manual_enable_at_startup=1
+nmap <Leader><CR> <Plug>(quickhl-manual-this-whole-word)
+vmap <Leader><CR> <Plug>(quickhl-manual-this-whole-word)
+nmap <silent> <BS> <Plug>(quickhl-manual-reset):nohlsearch<CR>:set cursorline<CR>:redraw<CR>:sleep 150m<CR>:set nocursorline<CR>
 " }}}
 
 " Cscope {{{
@@ -141,15 +140,15 @@ nnoremap <Leader>ca :lcscope find a <C-R>=expand("<cword>")<CR><CR>:lopen<CR>
 " Configuration for C {{{
 augroup Ccfg
     autocmd!
-    autocmd FileType c setlocal listchars=trail:.,tab:>-,extends:>,precedes:< list
-    autocmd FileType c setlocal tabstop=4 shiftwidth=4 shiftround expandtab
-    autocmd FileType c setlocal textwidth=80 colorcolumn=+1
-    autocmd FileType c setlocal tagcase=match
-    autocmd FileType c setlocal cscopetag
-    autocmd FileType c setlocal breakindent
-    autocmd FileType c setlocal autoindent
-    autocmd FileType c iabbrev <buffer> /*-*/ /*----------------------------------------------------------------------------*/
+    autocmd FileType c,cpp setlocal listchars=trail:.,tab:>-,extends:>,precedes:< list
+    autocmd FileType c,cpp setlocal tabstop=4 shiftwidth=4 shiftround expandtab
+    autocmd FileType c,cpp setlocal textwidth=80 colorcolumn=+1
+    autocmd FileType c,cpp setlocal tagcase=match
+    autocmd FileType c,cpp setlocal cscopetag
+    autocmd FileType c,cpp setlocal breakindent autoindent
+    autocmd FileType c,cpp iabbrev <buffer> /*-*/ /*----------------------------------------------------------------------------*/
     autocmd FileType c call matchadd("ErrorMsg", '\v\s+$')
+    autocmd FileType c,cpp nnoremap <buffer> <F12> :normal! %0y$%A /* <Esc>pA */<Esc>
 augroup END
 " }}}
 
