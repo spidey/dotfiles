@@ -8,28 +8,41 @@ endif
 call plug#begin()
 Plug 'lifepillar/vim-solarized8'
 Plug 'scrooloose/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'majutsushi/tagbar'
-Plug 'airblade/vim-gitgutter'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-fugitive'
 Plug 'tommcdo/vim-fugitive-blame-ext'
 Plug 't9md/vim-quickhl'
-Plug 'fabiowguerra/vim-wmls-syntax'
 Plug 'jreybert/vimagit'
-Plug 'terryma/vim-multiple-cursors'
 Plug 'gregsexton/gitv'
+Plug 'martinda/Jenkinsfile-vim-syntax'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'fabiowguerra/vim-wmls-syntax'
+Plug 'ctrlpvim/ctrlp.vim'
 call plug#end()
+
+if executable('ag')
+  set grepprg=ag\ --nogroup\ --nocolor
+  let g:ctrlp_user_command = 'ag %s --ignore !.*\.bat -l --nocolor -g "" | tr -d "\r"'
+endif
+let g:ctrlp_clear_cache_on_exit = 0
+let g:ctrlp_lazy_update = 1
+let g:ctrlp_by_filename = 1
+let g:ctrlp_types = ['fil']
+let g:ctrlp_extensions = ['tag']
+let g:ctrlp_match_window = 'order:ttb,results:100'
 " }}}
 
 " Global settings {{{
 set nocompatible
-set number relativenumber
+set number relativenumber nowrap
 set splitright splitbelow
 
 set hlsearch incsearch nowrapscan ignorecase smartcase
 nohlsearch
+
+set tabstop=4 shiftwidth=4 shiftround expandtab
 
 set showcmd showmatch
 set updatetime=100
@@ -49,6 +62,8 @@ set noswapfile nobackup nowritebackup
 set termguicolors
 set background=dark
 colorscheme solarized8
+
+let $TMP="c:/desenv/temp"
 
 " Cursor shapes change depending on current mode
 let s:pipeCursor = "\<Esc>[0 q"
@@ -73,13 +88,14 @@ unlet s:underlineCursor
 nnoremap <Leader>ev :vsplit $MYVIMRC<CR>
 nnoremap <Leader>sv :source $MYVIMRC<CR>
 inoremap jk <Esc>
-map <Leader>y "+y
+noremap <Leader>y "+y
+nnoremap <silent> <F11> :set spell!<CR>
 
 " File navigation
 nnoremap <Leader>n :NERDTreeToggle<CR>
-nnoremap <Leader>t :TagbarToggle<CR>
-nnoremap j gj
-nnoremap k gk
+nnoremap <Leader>t :TagbarOpenAutoClose<CR>
+nnoremap <silent> j gj
+nnoremap <silent> k gk
 
 " Easy quickfix/location list navigation
 " <Esc>j = <A-j> in my setup
@@ -97,9 +113,12 @@ nnoremap ZA :xa<CR>
 
 " Custom highlighting with quickhl
 let g:quickhl_manual_enable_at_startup=1
-nmap <Leader><CR> <Plug>(quickhl-manual-this-whole-word)
-vmap <Leader><CR> <Plug>(quickhl-manual-this-whole-word)
+map <silent> <Leader><CR> <Plug>(quickhl-manual-this-whole-word)
 nmap <silent> <BS> <Plug>(quickhl-manual-reset):nohlsearch<CR>:set cursorline<CR>:redraw<CR>:sleep 150m<CR>:set nocursorline<CR>
+
+" POSWEB build shortcuts
+nnoremap <silent> <C-S-F8> :botright 10split \| :lcd poscommon/build \| terminal ++curwin ./build.bat parcial<CR>
+nnoremap <silent> <C-S-F9> :botright 10split \| :lcd poscommon/build \| terminal ++curwin ./build.bat<CR>
 " }}}
 
 " Cscope {{{
@@ -245,7 +264,7 @@ function! PwAdjustToCodingStandard(...) " {{{
     let &more = oldMore
 endfunction " }}}
 
-function! FindReleaseNotesVersionsForIssues(issues)
+function! FindReleaseNotesVersionsForIssues(issues) " {{{
     let poswebIssues = a:issues
     "let issues = map(split(poswebIssues, '\v,\s+'), '"PRD90004-".v:val')
     let issues = split(poswebIssues)
@@ -258,13 +277,11 @@ function! FindReleaseNotesVersionsForIssues(issues)
     redir END
 
     echo issuesWithVersions
-endfunction
+endfunction " }}}
 " }}}
+
 " Use plugin
 " michaeljsmith/vim-indent-object
-" jreybert/vimagit
-" terryma/vim-multiple-cursors
-" gregsexton/gitv
 " Create custom wml syntax plugin
 " Extend Fabio's custom wmls syntax plugin
 " Create AZIP wrapper using /usr/share/vim/vim80/plugin/gzip.vim
