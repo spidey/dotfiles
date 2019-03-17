@@ -1,4 +1,30 @@
+# ctags and cscope files
 cscope.in.out
 cscope.out
 cscope.po.out
 tags
+
+# Object files
+*.o
+*.ko
+
+# Libraries
+*.lib
+*.a
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Python precompiled scripts
+*.pyc
+
+# Java compiled code
+*.class
